@@ -17,8 +17,6 @@ A simple and responsive weather application built with **HTML**, **CSS**, and **
 ### 🖼️ Demo
 
 ![Screenshot](images/demo.png)
-*(Include a real screenshot of your app here)*
-
 ---
 
 ### 📦 Tech Stack
@@ -35,7 +33,7 @@ A simple and responsive weather application built with **HTML**, **CSS**, and **
 1. **Clone the repo**
 
    ```bash
-   git clone https://github.com/your-username/weather-app.git
+   git clone https://github.com/your-username/WeatherApp.git
    cd weather-app
    ```
 
