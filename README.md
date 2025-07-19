@@ -16,7 +16,7 @@ A simple and responsive weather application built with **HTML**, **CSS**, and **
 
 ### 🖼️ Demo
 
-![Screenshot](images/demo.png)
+<img src="images/demo.png" alt="Weather App Screenshot" width="600"/>
 ---
 
 ### 📦 Tech Stack
