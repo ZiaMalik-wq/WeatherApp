@@ -14,9 +14,11 @@ A simple and responsive weather application built with **HTML**, **CSS**, and **
 
 ---
 
-### 🖼️ Demo
+## 🌐 Live Demo
 
-<img src="images/demo.png" alt="Weather App Screenshot" width="600"/>
+👉 **Try it here:**  
+https://weather-app-chi-smoky-14.vercel.app/
+
 ---
 
 ### 📦 Tech Stack
@@ -28,13 +30,21 @@ A simple and responsive weather application built with **HTML**, **CSS**, and **
 
 ---
 
-### 🛠️ How to Use
+## 🛠️ How to Use
+
+### 📺 View Online
+
+Simply open the live demo:  
+https://weather-app-chi-smoky-14.vercel.app/
+
+---
+
+### 💻 Run Locally
 
 1. **Clone the repo**
-
    ```bash
    git clone https://github.com/your-username/WeatherApp.git
-   cd weather-app
+   cd WeatherApp
    ```
 
 2. **Open `index.html` in your browser**
