@@ -60,6 +60,7 @@ A simple and responsive weather application built with **HTML**, **CSS**, and **
 ---
 
 ### 📄 License
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 This project is licensed under the MIT License — feel free to use and modify.
 
