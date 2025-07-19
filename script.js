@@ -1,60 +1,143 @@
+// API and Global State Variables
 const apiKey = "REMOVED";
-const apiURL = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+const apiBaseURL = "https://api.openweathermap.org/data/2.5/weather?";
 
+let currentUnit = "metric";
+let lastSearch = { type: null, value: null };
+
+// DOM Element Selectors
 const searchBox = document.querySelector(".search input");
-const searchButton = document.querySelector(".search button");
+const searchButton = document.querySelector(".search .search-btn");
+const geoButton = document.querySelector(".search .geo-btn");
 const weatherIcon = document.querySelector(".weather-icon");
-
-const cityName = document.querySelector(".city");
-const temperature = document.querySelector(".temp");
-const humidity = document.querySelector(".humidity");
-const windSpeed = document.querySelector(".wind");
+const cityNameEl = document.querySelector(".city");
+const temperatureEl = document.querySelector(".temp");
+const humidityEl = document.querySelector(".humidity");
+const windSpeedEl = document.querySelector(".wind");
 const errorBox = document.querySelector(".error");
 const weatherBox = document.querySelector(".weather");
+const unitSwitch = document.querySelector("#unit-switch");
+const unitLabels = document.querySelectorAll(".unit-label");
 
+// Sets the correct weather icon based on the weather condition
 const setWeatherIcon = (condition) => {
     const icons = {
-        Clouds: "clouds.png",
-        Clear: "clear.png",
-        Rain: "rain.png",
-        Drizzle: "drizzle.png",
-        Mist: "mist.png",
-        Snow: "snow.png",
+        Clouds: "clouds.png", Clear: "clear.png", Rain: "rain.png",
+        Drizzle: "drizzle.png", Mist: "mist.png", Snow: "snow.png",
     };
-    const icon = icons[condition] || "clear.png";
-    weatherIcon.src = `images/${icon}`;
+    weatherIcon.src = `images/${icons[condition] || "clear.png"}`;
 };
 
-async function checkWeather(city) {
+// Updates the UI with the fetched weather data
+const updateUI = (data) => {
+    const tempUnit = currentUnit === "metric" ? "°C" : "°F";
+    const windUnit = currentUnit === "metric" ? "km/h" : "mph";
+
+    cityNameEl.textContent = data.name;
+    temperatureEl.textContent = `${Math.round(data.main.temp)}${tempUnit}`;
+    humidityEl.textContent = `${data.main.humidity}%`;
+    windSpeedEl.textContent = `${data.wind.speed} ${windUnit}`;
+    setWeatherIcon(data.weather[0].main);
+
+    weatherBox.style.display = "block";
+    errorBox.style.display = "none";
+    localStorage.setItem("lastCity", data.name);
+};
+
+// Shows an error message
+const showError = (message) => {
+    errorBox.querySelector("p").textContent = message;
+    errorBox.style.display = "block";
+    weatherBox.style.display = "none";
+};
+
+async function fetchWeatherData(url) {
     try {
-        if (!city) throw new Error("Please enter a city name.");
-
-        const response = await fetch(apiURL + city + `&appid=${apiKey}`);
-        if (!response.ok) throw new Error("City not found.");
-
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(response.status === 404 ? "Location not found." : "An error occurred.");
+        }
         const data = await response.json();
-
-        cityName.textContent = data.name;
-        temperature.textContent = Math.round(data.main.temp) + "°C";
-        humidity.textContent = data.main.humidity + "%";
-        windSpeed.textContent = data.wind.speed + " km/h";
-        setWeatherIcon(data.weather[0].main);
-
-        weatherBox.style.display = "block";
-        errorBox.style.display = "none";
+        updateUI(data);
+        return data;
     } catch (error) {
-        errorBox.style.display = "block";
-        errorBox.querySelector("p").textContent = error.message;
-        weatherBox.style.display = "none";
+        showError(error.message);
+        return null; 
     }
 }
 
+// Fetches weather by city name
+async function getWeatherByCity(city) {
+    if (!city) {
+        showError("Please enter a city name.");
+        return;
+    }
+    const url = `${apiBaseURL}q=${city}&units=${currentUnit}&appid=${apiKey}`;
+    const data = await fetchWeatherData(url);
+    if (data) {
+        lastSearch = { type: 'city', value: city };
+    }
+}
+
+// Fetches weather by coordinates
+async function getWeatherByCoords(lat, lon) {
+    const url = `${apiBaseURL}lat=${lat}&lon=${lon}&units=${currentUnit}&appid=${apiKey}`;
+    const data = await fetchWeatherData(url);
+    if (data) {
+        lastSearch = { type: 'coords', value: { lat, lon } };
+    }
+}
+
+// --- Geolocation Logic ---
+
+const handleGeoSuccess = (position) => {
+    const { latitude, longitude } = position.coords;
+    getWeatherByCoords(latitude, longitude);
+};
+
+const handleGeoError = () => {
+    showError("Unable to retrieve your location. Please grant permission or search for a city.");
+};
+
+
+// Search button click
 searchButton.addEventListener("click", () => {
-    checkWeather(searchBox.value.trim());
+    getWeatherByCity(searchBox.value.trim());
 });
 
+// Enter key press in search box
 searchBox.addEventListener("keyup", (e) => {
     if (e.key === "Enter") {
-        checkWeather(searchBox.value.trim());
+        getWeatherByCity(searchBox.value.trim());
+    }
+});
+
+// Geolocation button click
+geoButton.addEventListener("click", () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
+    } else {
+        showError("Geolocation is not supported by your browser.");
+    }
+});
+
+// Unit toggle switch change
+unitSwitch.addEventListener("change", () => {
+    currentUnit = unitSwitch.checked ? "imperial" : "metric";
+    
+    // Update labels' active state
+    unitLabels.forEach(label => label.classList.toggle('active'));
+
+    if (lastSearch.type === 'city') {
+        getWeatherByCity(lastSearch.value);
+    } else if (lastSearch.type === 'coords') {
+        getWeatherByCoords(lastSearch.value.lat, lastSearch.value.lon);
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const lastCity = localStorage.getItem("lastCity");
+    if (lastCity) {
+        getWeatherByCity(lastCity);
     }
 });

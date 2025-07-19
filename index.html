@@ -10,7 +10,19 @@
   <div class="card">
     <div class="search">
       <input type="text" placeholder="Enter City Name" spellcheck="false" />
-      <button><img src="images/search.png" alt="Search" /></button>
+      <!-- Added Geolocation Button -->
+      <button class="geo-btn"><img src="images/location.png" alt="Get Location"></button>
+      <button class="search-btn"><img src="images/search.png" alt="Search" /></button>
+    </div>
+
+    <!-- Added Temperature Unit Toggle -->
+    <div class="unit-toggle">
+        <label for="unit-switch" class="unit-label active">°C</label>
+        <label class="switch">
+            <input type="checkbox" id="unit-switch">
+            <span class="slider round"></span>
+        </label>
+        <label for="unit-switch" class="unit-label">°F</label>
     </div>
 
     <div class="error"><p>Invalid City Name</p></div>
