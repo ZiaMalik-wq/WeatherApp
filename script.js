@@ -89,15 +89,25 @@ async function getWeatherByCoords(lat, lon) {
 }
 
 // --- Geolocation Logic ---
-
 const handleGeoSuccess = (position) => {
-    const { latitude, longitude } = position.coords;
-    getWeatherByCoords(latitude, longitude);
+  const { latitude, longitude } = position.coords;
+  getWeatherByCoords(latitude, longitude);
 };
 
-const handleGeoError = () => {
-    showError("Unable to retrieve your location. Please grant permission or search for a city.");
+const handleGeoError = (error) => {
+  let msg = "Unable to retrieve your location.";
+  if (error?.code === error.PERMISSION_DENIED) {
+    msg = "Location permission denied. Please allow access or search for a city.";
+  } else if (error?.code === error.POSITION_UNAVAILABLE) {
+    msg = "Location unavailable. Try again later or search for a city.";
+  } else if (error?.code === error.TIMEOUT) {
+    msg = "Location request timed out. Please try again.";
+  } else {
+    msg += " Please grant permission or search for a city.";
+  }
+  showError(msg);       
 };
+
 
 
 // Search button click
@@ -114,12 +124,17 @@ searchBox.addEventListener("keyup", (e) => {
 
 // Geolocation button click
 geoButton.addEventListener("click", () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
-    } else {
-        showError("Geolocation is not supported by your browser.");
-    }
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      handleGeoSuccess,
+      handleGeoError,
+      { enableHighAccuracy: false, timeout: 10000 }
+    );
+  } else {
+    showError("Geolocation is not supported by your browser. Please search for a city instead.");
+  }
 });
+
 
 // Unit toggle switch change
 unitSwitch.addEventListener("change", () => {
