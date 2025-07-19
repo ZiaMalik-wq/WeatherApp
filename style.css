@@ -109,14 +109,11 @@ body {
   text-align: left;
 }
 
-/* Add these styles to the end of your style.css file */
 
-/* Style for the new geolocation button */
 .search .geo-btn {
   margin-right: 10px;
 }
 
-/* Style for the C/F toggle switch */
 .unit-toggle {
     display: flex;
     justify-content: center;

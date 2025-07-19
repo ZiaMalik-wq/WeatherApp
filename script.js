@@ -19,7 +19,6 @@ const weatherBox = document.querySelector(".weather");
 const unitSwitch = document.querySelector("#unit-switch");
 const unitLabels = document.querySelectorAll(".unit-label");
 
-// Sets the correct weather icon based on the weather condition
 const setWeatherIcon = (condition) => {
     const icons = {
         Clouds: "clouds.png", Clear: "clear.png", Rain: "rain.png",
@@ -44,7 +43,6 @@ const updateUI = (data) => {
     localStorage.setItem("lastCity", data.name);
 };
 
-// Shows an error message
 const showError = (message) => {
     errorBox.querySelector("p").textContent = message;
     errorBox.style.display = "block";
@@ -66,7 +64,6 @@ async function fetchWeatherData(url) {
     }
 }
 
-// Fetches weather by city name
 async function getWeatherByCity(city) {
     if (!city) {
         showError("Please enter a city name.");
@@ -79,7 +76,6 @@ async function getWeatherByCity(city) {
     }
 }
 
-// Fetches weather by coordinates
 async function getWeatherByCoords(lat, lon) {
     const url = `${apiBaseURL}lat=${lat}&lon=${lon}&units=${currentUnit}&appid=${apiKey}`;
     const data = await fetchWeatherData(url);
@@ -88,7 +84,6 @@ async function getWeatherByCoords(lat, lon) {
     }
 }
 
-// --- Geolocation Logic ---
 const handleGeoSuccess = (position) => {
   const { latitude, longitude } = position.coords;
   getWeatherByCoords(latitude, longitude);
@@ -105,24 +100,21 @@ const handleGeoError = (error) => {
   } else {
     msg += " Please grant permission or search for a city.";
   }
-  showError(msg);       
+  showError(msg);
 };
 
-
-
-// Search button click
 searchButton.addEventListener("click", () => {
     getWeatherByCity(searchBox.value.trim());
 });
 
-// Enter key press in search box
+
 searchBox.addEventListener("keyup", (e) => {
     if (e.key === "Enter") {
         getWeatherByCity(searchBox.value.trim());
     }
 });
 
-// Geolocation button click
+
 geoButton.addEventListener("click", () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
