@@ -1,0 +1,36 @@
+# -----------------------------------------------------------------------------
+# Core
+# -----------------------------------------------------------------------------
+# Never commit secrets
+.env
+.env.*
+*.local
+
+# Compiled / build output (if you later add a bundler or framework)
+dist/
+build/
+out/
+
+# Dependency directories (if you run npm/yarn/pnpm later)
+node_modules/
+
+# -----------------------------------------------------------------------------
+# System / editor files
+# -----------------------------------------------------------------------------
+.DS_Store          # macOS Finder cruft
+Thumbs.db          # Windows image cache
+desktop.ini
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# -----------------------------------------------------------------------------
+# Logs & debug
+# -----------------------------------------------------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
