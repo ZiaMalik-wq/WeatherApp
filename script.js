@@ -1,5 +1,5 @@
 // API and Global State Variables
-const apiKey = "REMOVED";
+const apiKey = process.env.OPENWEATHER_KEY;
 const apiBaseURL = "https://api.openweathermap.org/data/2.5/weather?";
 
 let currentUnit = "metric";
