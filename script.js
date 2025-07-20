@@ -1,5 +1,5 @@
 // API and Global State Variables
-const apiKey = process.env.OPENWEATHER_KEY;
+const apiKey = "136890a82f59013c0fc13e341aebcaa0";
 const apiBaseURL = "https://api.openweathermap.org/data/2.5/weather?";
 
 let currentUnit = "metric";
